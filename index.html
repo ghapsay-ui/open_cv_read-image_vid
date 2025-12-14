@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image and Video Display</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #2c3e50;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #34495e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        #imageDisplay {
+            max-width: 800px;
+            max-height: 600px;
+            display: block;
+            margin: 0 auto;
+            border: 3px solid #ecf0f1;
+        }
+
+        #videoDisplay {
+            max-width: 800px;
+            max-height: 600px;
+            display: none;
+            margin: 0 auto;
+            border: 3px solid #ecf0f1;
+        }
+
+        .instructions {
+            color: #ecf0f1;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Image Display -->
+        <img id="imageDisplay" src="Photos/sisters.jpg" alt="Sisters">
+        
+        <!-- Video Display -->
+        <video id="videoDisplay" src="videos/chayplay.mp4"></video>
+        
+        <!-- Instructions -->
+        <div class="instructions">
+            <p id="imageInstructions">Press any key to continue to video</p>
+            <p id="videoInstructions" class="hidden">Press 'D' to stop video</p>
+        </div>
+    </div>
+
+    <script>
+        const imageDisplay = document.getElementById('imageDisplay');
+        const videoDisplay = document.getElementById('videoDisplay');
+        const imageInstructions = document.getElementById('imageInstructions');
+        const videoInstructions = document.getElementById('videoInstructions');
+        
+        let imagePhase = true;
+
+        // Handle keyboard events
+        document.addEventListener('keydown', function(event) {
+            if (imagePhase) {
+                // Any key press transitions from image to video
+                startVideo();
+            } else {
+                // Press 'D' to stop video
+                if (event.key === 'd' || event.key === 'D') {
+                    stopVideo();
+                }
+            }
+        });
+
+        function startVideo() {
+            // Hide image and show video
+            imageDisplay.style.display = 'none';
+            videoDisplay.style.display = 'block';
+            imageInstructions.classList.add('hidden');
+            videoInstructions.classList.remove('hidden');
+            
+            // Play video
+            videoDisplay.play();
+            imagePhase = false;
+        }
+
+        function stopVideo() {
+            videoDisplay.pause();
+            videoDisplay.currentTime = 0;
+            alert('Video stopped!');
+        }
+
+        // Handle video end event
+        videoDisplay.addEventListener('ended', function() {
+            console.log('Video finished playing');
+            stopVideo();
+        });
+
+        // Handle video errors
+        videoDisplay.addEventListener('error', function(e) {
+            console.error('Error loading video:', e);
+            alert('Error: Could not load video file');
+        });
+
+        // Handle image errors
+        imageDisplay.addEventListener('error', function(e) {
+            console.error('Error loading image:', e);
+            alert('Error: Could not load image file');
+        });
+    </script>
+</body>
+</html>
